@@ -1,0 +1,14 @@
+{
+  "name": "qr-batch-scanner",
+  "version": "1.0.0",
+  "description": "QR Batch Scanner - Multi-user QR code scanning and validation system",
+  "private": true,
+  "workspaces": [
+    "server"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=server",
+    "start": "npm run start --workspace=server",
+    "test": "npm run test --workspace=server"
+  }
+}
