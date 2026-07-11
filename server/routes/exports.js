@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import ExcelJS from 'exceljs';
+import { adminAuth } from '../middleware/auth.js';
 
 const router = Router();
 
@@ -13,8 +14,8 @@ function sanitizeFilename(name) {
   return name.replace(/[<>:"/\\|?*]/g, '_');
 }
 
-// GET /api/exports/all - Export all scans to Excel
-router.get('/all', (req, res) => {
+// GET /api/exports/all - Export all scans to Excel (admin auth)
+router.get('/all', adminAuth, (req, res) => {
   const db = req.db;
 
   const batches = db.prepare('SELECT id, name FROM batches ORDER BY created_at DESC').all();
@@ -47,8 +48,8 @@ router.get('/all', (req, res) => {
   workbook.commit();
 });
 
-// GET /api/exports/:batchId - Export a single batch to Excel
-router.get('/:batchId', (req, res) => {
+// GET /api/exports/:batchId - Export a single batch to Excel (admin auth)
+router.get('/:batchId', adminAuth, (req, res) => {
   const db = req.db;
   const { batchId } = req.params;
 

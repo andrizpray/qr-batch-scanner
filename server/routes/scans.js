@@ -1,9 +1,10 @@
 import { Router } from 'express';
+import { mobileAuth } from '../middleware/auth.js';
 
 const router = Router();
 
-// POST / — add scan to batch, increments batch.scan_count
-router.post('/', (req, res) => {
+// POST / — add scan to batch, increments batch.scan_count (mobile auth)
+router.post('/', mobileAuth, (req, res) => {
   const { batch_id, lot_id } = req.body;
   const db = req.db;
 
