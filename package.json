@@ -1,14 +1,20 @@
 {
   "name": "qr-batch-scanner",
   "version": "1.0.0",
-  "description": "QR Batch Scanner - Multi-user QR code scanning and validation system",
+  "description": "QR Batch Scanner - Mobile PWA + Admin Dashboard + Node.js API",
   "private": true,
   "workspaces": [
-    "server"
+    "server",
+    "client"
   ],
   "scripts": {
-    "dev": "npm run dev --workspace=server",
-    "start": "npm run start --workspace=server",
-    "test": "npm run test --workspace=server"
+    "dev": "concurrently \"npm run dev --workspace=server\" \"npm run dev --workspace=client\"",
+    "dev:server": "npm run dev --workspace=server",
+    "dev:client": "npm run dev --workspace=client",
+    "build": "npm run build --workspace=client",
+    "start": "npm run start --workspace=server"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
   }
 }
