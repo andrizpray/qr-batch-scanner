@@ -1,6 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import { getDb } from './db.js';
+import batchesRouter from './routes/batches.js';
+import scansRouter from './routes/scans.js';
+import exportsRouter from './routes/exports.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -14,18 +17,16 @@ app.use((req, res, next) => {
   next();
 });
 
+// Mount routers
+app.use('/api/batches', batchesRouter);
+app.use('/api/scans', scansRouter);
+app.use('/api/exports', exportsRouter);
+
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// Placeholder — real routes added in later tasks
-app.get('/api/batches', (req, res) => {
-  res.json([]);
-});
-
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
-
-export { app };
