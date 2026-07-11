@@ -21,57 +21,23 @@ export function getDb() {
 
 function initializeSchema() {
   db.exec(`
-    CREATE TABLE IF NOT EXISTS users (
+    CREATE TABLE IF NOT EXISTS batches (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      username TEXT UNIQUE NOT NULL,
-      password_hash TEXT NOT NULL,
-      display_name TEXT NOT NULL,
-      role TEXT NOT NULL DEFAULT 'operator',
+      name TEXT NOT NULL,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    );
-
-    CREATE TABLE IF NOT EXISTS qr_codes (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      code TEXT UNIQUE NOT NULL,
-      label TEXT,
-      batch_id INTEGER,
-      status TEXT NOT NULL DEFAULT 'active',
-      created_by INTEGER REFERENCES users(id),
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      scan_count INTEGER DEFAULT 0
     );
 
     CREATE TABLE IF NOT EXISTS scans (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      qr_code_id INTEGER REFERENCES qr_codes(id),
-      user_id INTEGER REFERENCES users(id),
+      batch_id INTEGER NOT NULL,
+      lot_id TEXT NOT NULL,
       scanned_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      location_lat REAL,
-      location_lng REAL,
-      device_info TEXT,
-      valid INTEGER NOT NULL DEFAULT 1
+      FOREIGN KEY (batch_id) REFERENCES batches(id) ON DELETE CASCADE
     );
 
-    CREATE TABLE IF NOT EXISTS batches (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT NOT NULL,
-      description TEXT,
-      status TEXT NOT NULL DEFAULT 'active',
-      created_by INTEGER REFERENCES users(id),
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    );
-
-    CREATE TABLE IF NOT EXISTS audit_log (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      user_id INTEGER REFERENCES users(id),
-      action TEXT NOT NULL,
-      entity_type TEXT,
-      entity_id INTEGER,
-      details TEXT,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    );
+    CREATE INDEX IF NOT EXISTS idx_scans_batch_id ON scans(batch_id);
+    CREATE INDEX IF NOT EXISTS idx_batches_created_at ON batches(created_at);
   `);
 }
 

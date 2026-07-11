@@ -5,44 +5,27 @@ import { getDb } from './db.js';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
-app.use(cors());
+app.use(cors({ origin: ['http://localhost:5173', 'http://localhost:3000'] }));
 app.use(express.json());
 
-// Health check endpoint
-app.get('/health', (req, res) => {
+// Attach db to request — all routes need access to req.db
+app.use((req, res, next) => {
+  req.db = getDb();
+  next();
+});
+
+// Health check
+app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// Initialize database on startup
-try {
-  getDb();
-  console.log('Database initialized successfully');
-} catch (err) {
-  console.error('Failed to initialize database:', err);
-  process.exit(1);
-}
-
-// Placeholder routes
-app.get('/api/users', (req, res) => {
-  res.json({ message: 'Users endpoint - to be implemented' });
-});
-
-app.get('/api/qr-codes', (req, res) => {
-  res.json({ message: 'QR codes endpoint - to be implemented' });
-});
-
-app.get('/api/scans', (req, res) => {
-  res.json({ message: 'Scans endpoint - to be implemented' });
-});
-
+// Placeholder — real routes added in later tasks
 app.get('/api/batches', (req, res) => {
-  res.json({ message: 'Batches endpoint - to be implemented' });
+  res.json([]);
 });
 
-// Start server
-const server = app.listen(PORT, () => {
-  console.log(`QR Batch Scanner server running on port ${PORT}`);
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
 
-export { app, server };
+export { app };
