@@ -62,10 +62,11 @@
 
         <!-- Batch Cards -->
         <div v-else class="space-y-3">
-          <div
+          <router-link
             v-for="batch in batches"
             :key="batch.id"
-            class="card bg-white shadow-sm"
+            :to="`/mobile/scanner/${batch.id}`"
+            class="card bg-white shadow-sm block hover:shadow-md transition-shadow"
           >
             <div class="card-body p-4">
               <div class="flex items-center justify-between">
@@ -76,7 +77,7 @@
                     {{ formatDate(batch.created_at) }}
                   </p>
                 </div>
-                <div class="flex gap-2">
+                <div @click.stop>
                   <router-link
                     :to="`/mobile/history/${batch.id}`"
                     class="btn btn-ghost btn-sm btn-circle"
@@ -86,16 +87,10 @@
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </router-link>
-                  <router-link
-                    :to="`/mobile/scanner/${batch.id}`"
-                    class="btn btn-primary btn-sm"
-                  >
-                    Scan
-                  </router-link>
                 </div>
               </div>
             </div>
-          </div>
+          </router-link>
         </div>
 
       </div>

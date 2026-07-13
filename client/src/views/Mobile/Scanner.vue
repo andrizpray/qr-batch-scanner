@@ -11,8 +11,8 @@ const router = useRouter()
 
 const batchId = route.params.batchId as string
 
-// PIN is stored in sessionStorage (set by BatchList before navigating here)
-const pin = sessionStorage.getItem('mobile_pin') || ''
+// PIN is stored in localStorage (set by BatchList)
+const pin = localStorage.getItem('mobile_pin') || ''
 setMobilePin(pin)
 
 // ─── State ────────────────────────────────────────────────────────────────────

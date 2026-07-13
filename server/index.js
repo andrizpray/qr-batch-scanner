@@ -26,6 +26,10 @@ app.use(express.json());
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const distPath = path.resolve(__dirname, '../client/dist');
+app.use((req, res, next) => {
+  if (req.path === '/' || !req.path.startsWith('/api')) res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+  next();
+});
 app.use(express.static(distPath));
 
 // Attach db to request — all routes need access to req.db
